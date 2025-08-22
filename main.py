@@ -1,4 +1,5 @@
 import os
+from idlelib.pyshell import usage_msg
 
 from dotenv import load_dotenv
 from google import genai
@@ -16,6 +17,10 @@ def main():
         contents="Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum."
     )
     print(response.text)
+
+    usage_metadata = response.usage_metadata
+    print("Prompt tokens:", usage_metadata.prompt_token_count)
+    print("Response tokens:", usage_metadata.candidates_token_count)
 
 
 if __name__ == "__main__":
