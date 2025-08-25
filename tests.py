@@ -2,9 +2,21 @@ from functions.get_file_content import get_file_content
 
 
 def main():
-    result = get_file_content("calculator", "lorem.txt")
-    print(result[:10000])
-    print(result[10000:])
+    print('get_file_content("calculator", "main.py"):\n====================')
+    print(get_file_content("calculator", "main.py"))
+    print('====================')
+
+    print('get_file_content("calculator", "pkg/calculator.py"):\n====================')
+    print(get_file_content("calculator", "pkg/calculator.py"))
+    print('====================')
+
+    print('get_file_content("calculator", "/bin/cat"):\n====================')
+    print(get_file_content("calculator", "/bin/cat"))
+    print('====================')
+
+    print('get_file_content("calculator", "pkg/does_not_exist.py"):\n====================')
+    print(get_file_content("calculator", "pkg/does_not_exist.py"))
+    print('====================')
 
 
 if __name__ == "__main__":

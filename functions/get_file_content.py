@@ -8,8 +8,6 @@ def get_file_content(working_directory, file_path):
     full_path = (wd_path / file_path).resolve()
 
     if not full_path.is_relative_to(wd_path.resolve()):
-        print(wd_path)
-        print(full_path)
         return f'Error: Cannot read "{file_path}" as it is outside the permitted working directory'
 
     if not full_path.is_file():
