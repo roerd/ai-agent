@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from config import max_file_size
+from config import MAX_FILE_SIZE
 
 
 def get_file_content(working_directory, file_path):
@@ -15,8 +15,8 @@ def get_file_content(working_directory, file_path):
             return f'Error: File not found or is not a regular file: "{file_path}"'
 
         content = full_path.read_text()
-        if len(content) > max_file_size:
-            content = content[:max_file_size] + f'[...File "{file_path}" truncated at 10000 characters]'
+        if len(content) > MAX_FILE_SIZE:
+            content = content[:MAX_FILE_SIZE] + f'[...File "{file_path}" truncated at 10000 characters]'
         return content
     except OSError as e:
         return f'Error: {e}'

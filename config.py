@@ -1,1 +1,1 @@
-max_file_size = 10_000
+MAX_FILE_SIZE = 10_000
