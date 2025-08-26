@@ -2,9 +2,11 @@ import subprocess
 from pathlib import Path
 
 
-def run_python_file(working_directory, file_path, args=()):
+def run_python_file(working_directory, file_path, args=None):
     wd_path = Path(working_directory)
     full_path = (wd_path / file_path).resolve()
+    if args is None:
+        args = []
 
     if not full_path.is_relative_to(wd_path.resolve()):
         return f'Error: Cannot execute "{file_path}" as it is outside the permitted working directory'
@@ -16,12 +18,12 @@ def run_python_file(working_directory, file_path, args=()):
         return f'Error: "{file_path}" is not a Python file.'
 
     try:
-        completed_process = subprocess.run([str(full_path)] + args, cwd=wd_path, capture_output=True, timeout=30)
+        completed_process = subprocess.run(['uv', 'run', str(full_path)] + args, cwd=wd_path, capture_output=True, timeout=30)
         output = []
         if completed_process.stdout:
-            output.append(f'STDOUT:{completed_process.stdout}')
+            output.append('STDOUT:' + completed_process.stdout.decode("utf-8"))
         if completed_process.stderr:
-            output.append(f'STDERR:{completed_process.stderr}')
+            output.append('STDERR:' + completed_process.stderr.decode("utf-8"))
         if not output:
             output.append("No output produced.")
         if completed_process.returncode != 0:
