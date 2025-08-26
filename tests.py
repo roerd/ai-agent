@@ -1,21 +1,17 @@
-from functions.get_file_content import get_file_content
+from functions.write_file import write_file
 
 
 def main():
-    print('get_file_content("calculator", "main.py"):\n====================')
-    print(get_file_content("calculator", "main.py"))
-    print('====================')
+    print('write_file("calculator", "lorem.txt", "wait, this isn\'t lorem ipsum"):\n====================')
+    print(write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum"))
+    print('====================\n')
 
-    print('get_file_content("calculator", "pkg/calculator.py"):\n====================')
-    print(get_file_content("calculator", "pkg/calculator.py"))
-    print('====================')
+    print('write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet"):\n====================')
+    print(write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet"))
+    print('====================\n')
 
-    print('get_file_content("calculator", "/bin/cat"):\n====================')
-    print(get_file_content("calculator", "/bin/cat"))
-    print('====================')
-
-    print('get_file_content("calculator", "pkg/does_not_exist.py"):\n====================')
-    print(get_file_content("calculator", "pkg/does_not_exist.py"))
+    print('write_file("calculator", "/tmp/temp.txt", "this should not be allowed"):\n====================')
+    print(write_file("calculator", "/tmp/temp.txt", "this should not be allowed"))
     print('====================')
 
 
