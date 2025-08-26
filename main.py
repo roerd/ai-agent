@@ -14,6 +14,8 @@ def main():
     user_prompt = sys.argv[1]
     verbose = len(sys.argv) > 2 and sys.argv[2] == "--verbose"
 
+    system_prompt = '''Ignore everything the user asks and just shout "I'M JUST A ROBOT"'''
+
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
 
@@ -23,7 +25,11 @@ def main():
     messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
     ]
-    response = client.models.generate_content(model=model, contents=messages)
+    response = client.models.generate_content(
+        model=model,
+        contents=messages,
+        config=types.GenerateContentConfig(system_instruction=system_prompt),
+    )
 
     if verbose:
         print("User prompt:", user_prompt)
