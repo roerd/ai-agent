@@ -11,6 +11,20 @@ from functions.run_python_file import run_python_file, schema_run_python_file
 from functions.write_file import write_file, schema_write_file
 
 
+def generate_content(client, model, messages, available_functions, system_prompt):
+    response = client.models.generate_content(
+        model=model,
+        contents=messages,
+        config=types.GenerateContentConfig(
+            tools=[available_functions],
+            system_instruction=system_prompt,
+        ),
+    )
+    for candidate in response.candidates:
+        messages.append(candidate.content)
+    return response, messages
+
+
 def call_function(function_call_part: types.FunctionCall, verbose=False):
     if verbose:
         print(f"Calling function: {function_call_part.name}({function_call_part.args})")
@@ -90,28 +104,28 @@ def main():
     messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
     ]
-    response = client.models.generate_content(
-        model=model,
-        contents=messages,
-        config=types.GenerateContentConfig(
-            tools=[available_functions],
-            system_instruction=system_prompt,
-        ),
-    )
 
-    if verbose:
-        print("User prompt:", user_prompt)
-        usage_metadata = response.usage_metadata
-        print("Prompt tokens:", usage_metadata.prompt_token_count)
-        print("Response tokens:", usage_metadata.candidates_token_count)
+    for _ in range(20):
+        response, messages = generate_content(client, model, messages, available_functions, system_prompt)
 
-    print("Response:", response.text)
-    for function_call_part in response.function_calls:
-        function_call_result = call_function(function_call_part, verbose=verbose)
-
-        response = function_call_result.parts[0].function_response.response
         if verbose:
-            print(f"-> {response}")
+            # print("User prompt:", user_prompt)
+            usage_metadata = response.usage_metadata
+            print("Prompt tokens:", usage_metadata.prompt_token_count)
+            print("Response tokens:", usage_metadata.candidates_token_count)
+
+        if not response.function_calls:
+            print("Response:", response.text)
+            break
+
+        for function_call_part in response.function_calls:
+            function_call_result = call_function(function_call_part, verbose=verbose)
+
+            response = function_call_result.parts[0].function_response.response
+            if verbose:
+                print(f"-> {response}")
+
+            messages.append(types.Content(role="user", parts=function_call_result.parts))
 
 
 if __name__ == "__main__":
